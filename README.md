@@ -39,3 +39,35 @@ Available commands:
 1. `/start hello`
 2. `/start ping`
 
+## Makefile allows you to build code on different platforms. 
+
+With this Makefile, you can specify the `TARGETOS`, `TARGETOSARCH` and `REGESTRY` variables when running the make command. 
+
+For example, to build the code for Linux on an AMD64/ARM64 architecture, and push to Google container registry, you would run:
+```bash
+make linux TARGETOSARCH=amd64 REGESTRY=HOSTNAME/PROJECT-ID
+make linux TARGETOSARCH=arm64 REGESTRY=HOSTNAME/PROJECT-ID
+
+```
+For example, to build the code for MacOS on an ARM64/ARM64 architecture, and push to Docker Hub container registry, you would run:
+```bash
+make macos TARGETOSARCH=amd64 REGESTRY=yourhubusername
+make macos TARGETOSARCH=arm64 REGESTRY=yourhubusername
+```
+
+For example, to build the code for Windows on an AMD64/ARM64 architecture, you would run:
+```bash
+make windows TARGETOSARCH=amd64
+make windows TARGETOSARCH=arm64
+```
+
+> The full list is based on the result of the command `go tool dist list`. The "32-bit/64-bit" information is based on https://golang.org/doc/install/source.
+
+## Support Grid:
+
+|                   | `darwin` |  `linux` | `windows` |                   |
+| ----------------: | :------: |  :-----: | :-------: | :---------------- |
+| **`amd64`**       |  ✅      | ✅       | ✅         | **`amd64`**      |
+| **`arm`**         |          | ✅       | ✅         | **`arm`**        |
+| **`arm64`**       | ✅       | ✅       | ✅         | **`arm64`**      |
+|  |  **`darwin`** | **`linux`** | **`windows`** |  |
