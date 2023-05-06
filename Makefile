@@ -1,6 +1,6 @@
 APP=$(shell basename $(shell git remote get-url origin))
-REGESTRY=gcr.io/minikube-385711 #vanelin
-
+REGESTRY=gcr.io/minikube-385711
+# REGESTRY=vanelin
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS=linux
 TARGETOSARCH=arm64
@@ -28,6 +28,7 @@ push:
 
 clean:
 	rm -rf kbot
+	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETOSARCH}
 
 linux: TARGETOS = linux
 linux: build image push clean

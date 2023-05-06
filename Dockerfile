@@ -1,4 +1,5 @@
-FROM  golang:1.19 as builder
+# FROM  golang:1.19 as builder
+FROM  quay.io/projectquay/golang:1.20 as builder
 ARG TARGETOS=linux
 ARG TARGETOSARCH=arm64
 WORKDIR /go/src/app
