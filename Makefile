@@ -1,4 +1,4 @@
-APP=$(shell basename $(shell git remote get-url origin))
+APP=$(shell basename $(shell git remote get-url origin) |cut -d '.' -f1)
 REGESTRY=gcr.io/minikube-385711
 # REGESTRY=vanelin
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
@@ -30,11 +30,17 @@ clean:
 	rm -rf kbot
 	docker rmi ${REGESTRY}/${APP}:${VERSION}-${TARGETOSARCH}
 
-linux: TARGETOS = linux
+linux: TARGETOS=linux
 linux: build image push clean
 
-windows: TARGETOS = windows
-windows: build image push clean
+windows:
+	${MAKE} build TARGETOS=windows
+	${MAKE} image TARGETOS=windows
+	${MAKE} push TARGETOS=windows
+	${MAKE} clean TARGETOS=windows
 
-macos: TARGETOS = darwin
-macos: build image push clean
+macos:
+	make build TARGETOS=darwin
+	make image TARGETOS=darwin
+	make push TARGETOS=darwin
+	make clean TARGETOS=darwin
