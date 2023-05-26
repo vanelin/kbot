@@ -13,23 +13,23 @@ tested Go version = 1.19.7
 Steps on local env:
 ```bash
 # password-protected SSH key
-git clone git@github.com:vanelin/kbot.git 
+$ git clone git@github.com:vanelin/kbot.git 
 
-cd kbot
+$ cd kbot
 
 # download and install dependency
-go get
+$ go get
 
 # type or copy-past telegram token for t.me/ivanvoloboyev_bot
-read -s TELE_TOKEN
+$ read -s TELE_TOKEN
 
-export TELE_TOKEN
+$ export TELE_TOKEN
 
 # build kbot app
-go build -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.2
+$ go build -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.2
 
 # start app
-./kbot start
+$ ./kbot start
 ```
 ## Usage
 After `./kbot start` go to Telegram bot and type **Srart**
@@ -41,32 +41,33 @@ Available commands:
 
 ## Makefile allows you to build code on different platforms. 
 
-### To `make push` you need to authorize google:
+To `make push` you need to authorize google:
+
 ```bash
 #install Google Cloud Code extantions to vscode
-gcloud auth login
-gcloud config set project minikube-385711
-gcloud auth configure-docker
+$ gcloud auth login
+$ gcloud config set project minikube-385711
+$ gcloud auth configure-docker
 ```
 
 With this Makefile, you can specify the `TARGETOS`, `TARGETOSARCH` and `REGESTRY` variables when running the make command. 
 
 For example, to build the code for Linux on an AMD64/ARM64 architecture, and push to Google container registry, you would run:
 ```bash
-make linux TARGETOSARCH=amd64 REGESTRY=HOSTNAME/PROJECT-ID
-make linux TARGETOSARCH=arm64 REGESTRY=HOSTNAME/PROJECT-ID
+$ make linux TARGETOSARCH=amd64 REGESTRY=HOSTNAME/PROJECT-ID
+$ make linux TARGETOSARCH=arm64 REGESTRY=HOSTNAME/PROJECT-ID
 
 ```
 For example, to build the code for MacOS on an ARM64/ARM64 architecture, and push to Docker Hub container registry, you would run:
 ```bash
-make macos TARGETOSARCH=amd64 REGESTRY=yourhubusername
-make macos TARGETOSARCH=arm64 REGESTRY=yourhubusername
+$ make macos TARGETOSARCH=amd64 REGESTRY=yourhubusername
+$ make macos TARGETOSARCH=arm64 REGESTRY=yourhubusername
 ```
 
 For example, to build the code for Windows on an AMD64/ARM64 architecture, you would run:
 ```bash
-make windows TARGETOSARCH=amd64
-make windows TARGETOSARCH=arm64
+$ make windows TARGETOSARCH=amd64
+$ make windows TARGETOSARCH=arm64
 ```
 
 > The full list is based on the result of the command `go tool dist list`. The "32-bit/64-bit" information is based on https://golang.org/doc/install/source.
@@ -96,7 +97,7 @@ https://github.com/vanelin/kbot/helm
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add argo https://github.com/vanelin/kbot
+$ helm repo add kbot https://github.com/vanelin/kbot/helm
 "kbot" has been added to your repositories
 
 $ helm install my-release vanelin/kbot --set secret.key="your_token"
