@@ -1,3 +1,14 @@
 apiVersion: v1
-entries: {}
-generated: "2023-05-26T15:38:33.348383+03:00"
+entries:
+  kbot:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-05-26T16:00:54.415689+03:00"
+    description: A Helm chart for Kubernetes
+    digest: 2e0ab21828f06608875b23f0b72c6b9764a26c0e2787447851d9f32fc1f6c7c8
+    name: kbot
+    type: application
+    urls:
+    - https://github.com/vanelin/kbot/releases/download/v1.0.5/kbot-0.1.0.tgz/charts/kbot-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-05-26T16:00:54.414938+03:00"
