@@ -32,6 +32,8 @@ $ go build -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.2
 $ ./kbot start
 ```
 ## Usage
+Go to telegram `kbot` @ivanvoloboyev_bot
+
 After `./kbot start` go to Telegram bot and type **Srart**
 
 Available commands:
@@ -97,10 +99,12 @@ https://github.com/vanelin/kbot/helm
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add kbot https://github.com/vanelin/kbot/helm
+$ helm repo add test https://raw.githubusercontent.com/vanelin/kbot/main/helm/
 "kbot" has been added to your repositories
 
-$ helm install my-release vanelin/kbot --set secret.key="your_token"
+$ helm search repo
+
+$ helm install my-release test/kbot --set secret.key="your_token"
 
 NAME: my-release
 SECRET.KEY: type token for bot kbot
