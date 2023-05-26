@@ -41,6 +41,14 @@ Available commands:
 
 ## Makefile allows you to build code on different platforms. 
 
+### To `make push` you need to authorize google:
+```bash
+#install Google Cloud Code extantions to vscode
+gcloud auth login
+gcloud config set project minikube-385711
+gcloud auth configure-docker
+```
+
 With this Makefile, you can specify the `TARGETOS`, `TARGETOSARCH` and `REGESTRY` variables when running the make command. 
 
 For example, to build the code for Linux on an AMD64/ARM64 architecture, and push to Google container registry, you would run:
@@ -71,3 +79,43 @@ make windows TARGETOSARCH=arm64
 | **`arm`**         |          | ✅       | ✅         | **`arm`**        |
 | **`arm64`**       | ✅       | ✅       | ✅         | **`arm64`**      |
 |  |  **`darwin`** | **`linux`** | **`windows`** |  |
+
+# Kbot Chart
+A Helm chart for Kbot, a declarative, GitOps continuous delivery tool for Kubernetes.
+
+Source code can be found here:
+
+https://github.com/vanelin/kbot/helm
+
+## Prerequisites
+- Kubernetes: `>=1.26.0-0`
+- Helm `v3.0.0+`
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm repo add argo https://github.com/vanelin/kbot
+"kbot" has been added to your repositories
+
+$ helm install my-release vanelin/kbot --set secret.key="your_token"
+
+NAME: my-release
+SECRET.KEY: type token for bot kbot
+...
+```
+## General parameters
+
+| Key | Type | Default |
+|-----|------|---------|
+| image.repository | string | `"gcr.io/minikube-385711"` |
+| image.tag | string | `"v1.0.5-a11547b"` |
+| image.tag  | string | `"arm64"` |
+| image.tag  | string | `"arm64"` | 
+| secret.name  | string | `"kbot"` |
+| secret.env  | string | `"TELE_TOKEN"` |
+| secret.key  | string | `"your_token"` |
+| securityContext.privileged | bool | `true` |
+
+

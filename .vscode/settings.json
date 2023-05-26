@@ -1,0 +1,9 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/chart.json": [
+            "file:///Users/ivan.voloboyev/GIT/devops/kbot/helm/templates/serviceaccount.yaml"
+        ],
+        "https://json.schemastore.org/yamllint.json": "file:///Users/ivan.voloboyev/GIT/devops/kbot/helm/templates/deployment.yaml"
+    },
+    "cfnLint.format.enable": true
+}

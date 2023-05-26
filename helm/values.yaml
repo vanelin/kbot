@@ -1,0 +1,16 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: gcr.io/minikube-385711
+  tag: "v1.0.5-a11547b"
+  arch: arm64
+secret:
+  name: "kbot"
+  env: "TELE_TOKEN"
+  key: "your_token"
+securityContext:
+  privileged: true
