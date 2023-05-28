@@ -19,11 +19,11 @@ jobs:
 
       - name: Run tests
         run: make test
-      ## Login to Google Cloud Container Registry
-      # - id: 'auth'
-      #   uses: 'google-github-actions/auth@v1'
-      #   with:
-      #     credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      # Login to Google Cloud Container Registry
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -39,4 +39,6 @@ jobs:
         env:
           APP: "kbot"
           REGESTRY: gcr.io/$PROJECT_ID
-        run: make image push
+        run: |-
+          echo "Regesty: gcr.io/$PROJECT_ID"
+          make image push
