@@ -36,9 +36,12 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGESTRY: gcr.io/${{ env.GCP_PROJECT }}
+          REGESTRY: gcr.io
+          TARGETOS: linux
+          TARGETOSARCH: arm64
+          REPOSITORY: ${{ env.GCP_PROJECT }}
         run: |-
-          echo "Project ID: ${{ env.GCP_PROJECT }}"
+          echo "Project ID: ${{ env.REGESTRY }}/${{ env.REPOSITORY }}"
           make image push
   cd:
     name: CD

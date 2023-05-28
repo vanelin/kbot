@@ -4,9 +4,13 @@
 
 replicaCount: 1
 image:
-  repository: gcr.io/minikube-385711
+  registry: "gcr.io"
+  repository: "minikube-385711"
   tag: "v1.0.6-8160a75"
+  os: linux
   arch: arm64
+
+
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
