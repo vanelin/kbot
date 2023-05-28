@@ -51,10 +51,10 @@ jobs:
           REGESTRY: ghcr.io
           TARGETOS: linux
           TARGETOSARCH: arm64
-          REPOSITORY: vanelin
+          REPOSITORY: ${{ github.repository }}
         run: |-
           echo "REGESTRY=${{ env.REGESTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
+          echo "REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
           make image push
   cd:
     name: CD
