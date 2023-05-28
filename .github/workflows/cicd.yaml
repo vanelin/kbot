@@ -23,7 +23,7 @@ jobs:
       - name: Run tests
         run: make test
       # Login and push to ghcr.io
-      - name: Login to ghcr.io
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
@@ -51,10 +51,10 @@ jobs:
           REGESTRY: ghcr.io
           TARGETOS: linux
           TARGETOSARCH: arm64
-          REPOSITORY: ${{ github.repository }}
+          REPOSITORY: ${{ github.actor }}
         run: |-
           echo "REGESTRY=${{ env.REGESTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
+          echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
           make image push
   cd:
     name: CD
