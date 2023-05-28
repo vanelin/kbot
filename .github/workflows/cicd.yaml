@@ -42,7 +42,7 @@ jobs:
           make image push
   cd:
     name: CD
-    needs: CI
+    needs: ci
     runs-on: ubuntu-latest
 
     steps:
@@ -58,4 +58,4 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -am "Update version to $VERSION"
-          git push
+          git push origin HEAD:develop
