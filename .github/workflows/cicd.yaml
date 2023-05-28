@@ -34,7 +34,8 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGESTRY: gcr.io/$GCP_PROJECT
+          REGESTRY: gcr.io/${{ env.GCP_PROJECT }}
         run: |-
-          echo "Regesty: gcr.io/$GCP_PROJECT"
-          make image push
+          echo "Project ID: ${{ env.GCP_PROJECT }}"
+          gcloud artifacts repositories list --project=${{ env.GCP_PROJECT }} --location=us
+
