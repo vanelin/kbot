@@ -13,18 +13,30 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3 
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Run tests
         run: make test
       ## Login to Google Cloud Container Registry
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      # - id: 'auth'
+      #   uses: 'google-github-actions/auth@v1'
+      #   with:
+      #     credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: 'Set up Cloud SDK'
+      - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          project_id: '${{ env.PROJECT_ID }}'
+          service_account_key: '${{ secrets.GCP_CREDENTIALS }}'
+          export_default_credentials: true
+      
+      - name: Configure Docker Client
+        run: gcloud auth configure-docker us-docker.pkg.dev --quiet
 
-      - name: 'Use gcloud CLI'
-        run: 'gcloud info'
+      - name: Build&Push
+        env:
+          APP: "kbot"
+          REGESTRY: gcr.io/$PROJECT_ID
+        run: make image push
