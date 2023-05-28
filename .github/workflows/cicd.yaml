@@ -30,7 +30,7 @@ jobs:
  
       - name: Configure Docker Client
         run: |-
-          gcloud auth login --quiet
+          gcloud auth configure-docker --quiet
           gcloud auth configure-docker us-docker.pkg.dev --quiet
 
       - name: Build&Push
