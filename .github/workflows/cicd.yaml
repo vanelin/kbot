@@ -27,10 +27,6 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v1'
-        with:
-          project_id: '${{ env.PROJECT_ID }}'
-          service_account_key: '${{ secrets.GCP_CREDENTIALS }}'
-          export_default_credentials: true
       
       - name: Configure Docker Client
         run: gcloud auth configure-docker us-docker.pkg.dev --quiet
@@ -38,7 +34,7 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGESTRY: gcr.io/$PROJECT_ID
+          REGESTRY: gcr.io/$GCP_PROJECT
         run: |-
-          echo "Regesty: gcr.io/$PROJECT_ID"
+          echo "Regesty: gcr.io/$GCP_PROJECT"
           make image push
