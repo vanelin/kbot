@@ -55,7 +55,7 @@ jobs:
         run: |-
           echo "REGESTRY=${{ env.REGESTRY }}" >> $GITHUB_ENV
           echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
-          make image push
+          make image push REGESTRY=${{ env.REGESTRY }} REPOSITORY=${{ github.actor }}
   cd:
     name: CD
     needs: ci
