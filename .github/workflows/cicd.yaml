@@ -52,7 +52,9 @@ jobs:
           TARGETOS: linux
           TARGETOSARCH: arm64
           REPOSITORY: ${{ github.actor }}
-        run: make image push
+        run: |-
+          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
+          make image push
   cd:
     name: CD
     needs: ci
@@ -72,7 +74,7 @@ jobs:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
             yq -i '.image.registry=(REGISTRY)' helm/values.yaml
-            yq -i '.image.registry=REPOSITORY' helm/values.yaml
+            yq -i '.image.registry=(REPOSITORY)' helm/values.yaml
       - run: |-
           git config user.name github-actions
           git config user.email github-actions@github.com
