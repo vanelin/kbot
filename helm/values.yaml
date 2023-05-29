@@ -4,9 +4,9 @@
 
 replicaCount: 1
 image:
-  registry: "gcr.io"
-  repository: "minikube-385711"
-  tag: "v1.0.6-c807ea2"
+  registry: ""
+  repository: ""
+  tag: "v1.0.6-2e102c8"
   os: linux
   arch: arm64
 secret:
