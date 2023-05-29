@@ -48,13 +48,11 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGISTRY: ghcr.io
-          TARGETOS: linux
-          TARGETOSARCH: arm64
-          REPOSITORY: ${{ github.actor }}
-        run: |-
-          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
-          make image push
+          REGISTRY: ${{ env.REGISTRY }}
+          TARGETOS: ${{ env.TARGETOS }}
+          TARGETOSARCH: ${{ env.TARGETOSARCH }}
+          REPOSITORY: ${{ env.REPOSITORY }}
+        run: make image push
   cd:
     name: CD
     needs: ci
@@ -67,7 +65,7 @@ jobs:
       - run: |-
           echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
+          echo "REPOSITORY=${{ env.REPOSITORY }}" >> $GITHUB_ENV
 
       - uses: mikefarah/yq@master
         with:
