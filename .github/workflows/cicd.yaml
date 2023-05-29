@@ -52,10 +52,7 @@ jobs:
           TARGETOS: linux
           TARGETOSARCH: arm64
           REPOSITORY: ${{ github.actor }}
-        run: |-
-          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
-          make image push
+        run: make image push
   cd:
     name: CD
     needs: ci
@@ -65,14 +62,17 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - run: |-
+          echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
+          echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
 
       - uses: mikefarah/yq@master
         with:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
-            yq -i '.image.registry=${{ env.REGISTRY }}' helm/values.yaml
-            yq -i '.image.registry=${{ env.REPOSITORY }}' helm/values.yaml
+            yq -i '.image.registry=(REGISTRY)' helm/values.yaml
+            yq -i '.image.registry=REPOSITORY' helm/values.yaml
       - run: |-
           git config user.name github-actions
           git config user.email github-actions@github.com
