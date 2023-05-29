@@ -48,14 +48,14 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGESTRY: ghcr.io
+          REGISTRY: ghcr.io
           TARGETOS: linux
           TARGETOSARCH: arm64
           REPOSITORY: ${{ github.actor }}
         run: |-
-          echo "REGESTRY=${{ env.REGESTRY }}" >> $GITHUB_ENV
+          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
           echo "REPOSITORY=${{ github.actor }}" >> $GITHUB_ENV
-          make image push REGESTRY=${{ env.REGESTRY }} REPOSITORY=${{ github.actor }}
+          make image push
   cd:
     name: CD
     needs: ci
@@ -71,7 +71,7 @@ jobs:
         with:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
-            yq -i '.image.registry=strenv(REGESTRY)' helm/values.yaml
+            yq -i '.image.registry=strenv(REGISTRY)' helm/values.yaml
             yq -i '.image.repository=strenv(REPOSITORY)' helm/values.yaml
       - run: |-
           git config user.name github-actions
