@@ -26,7 +26,7 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: ${{ vars.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -48,10 +48,10 @@ jobs:
       - name: Build&Push
         env:
           APP: "kbot"
-          REGISTRY: ${{ env.REGISTRY }}
-          TARGETOS: ${{ env.TARGETOS }}
-          TARGETOSARCH: ${{ env.TARGETOSARCH }}
-          REPOSITORY: ${{ env.REPOSITORY }}
+          REGISTRY: ${{ vars.REGISTRY }}
+          TARGETOS: ${{ vars.TARGETOS }}
+          TARGETOSARCH: ${{ vars.TARGETOSARCH }}
+          REPOSITORY: ${{ vars.REPOSITORY }}
         run: make image push
   cd:
     name: CD
@@ -64,15 +64,14 @@ jobs:
           fetch-depth: 0
       - run: |-
           echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "REGISTRY=${{ env.REGISTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ env.REPOSITORY }}" >> $GITHUB_ENV
+          echo "REGISTRY=${{ vars.REGISTRY }}" >> $GITHUB_ENV
 
       - uses: mikefarah/yq@master
         with:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
             yq -i '.image.registry=(REGISTRY)' helm/values.yaml
-            yq -i '.image.registry=(REPOSITORY)' helm/values.yaml
+            yq -i '.image.registry=${{ vars.REPOSITORY }}' helm/values.yaml
       - run: |-
           git config user.name github-actions
           git config user.email github-actions@github.com
