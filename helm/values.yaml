@@ -4,9 +4,9 @@
 
 replicaCount: 1
 image:
-  registry: ""
+  registry: "vanelin"
   repository: ""
-  tag: "v1.0.6-2e102c8"
+  tag: "v1.0.6-78cfac6"
   os: linux
   arch: arm64
 secret:
