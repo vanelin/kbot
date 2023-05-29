@@ -71,8 +71,8 @@ jobs:
         with:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
-            yq -i '.image.registry=strenv(REGISTRY)' helm/values.yaml
-            yq -i '.image.repository=strenv(REPOSITORY)' helm/values.yaml
+            yq -i '.image.registry=${{ env.REGISTRY }}' helm/values.yaml
+            yq -i '.image.registry=${{ env.REPOSITORY }}' helm/values.yaml
       - run: |-
           git config user.name github-actions
           git config user.email github-actions@github.com
