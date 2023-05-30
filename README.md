@@ -123,4 +123,17 @@ SECRET.KEY: type token for bot kbot
 | secret.key  | string | `"your_token"` |
 | securityContext.privileged | bool | `true` |
 
+# GitOps: CI/CD automation workflow using GitHub Actions, ArgoCD, and Helm charts deployed on K8s
+## Requirements:
+1. Grant R/W permissions for workflos in repository settings/Action/General/Workflow permissions
+2. Add variables to the repository settings:
 
+    REGISTRY: `ghcr.io`
+
+    REPOSITORY: `vanelin`
+
+    TARGETOS: `linux`
+
+    TARGETOSARCH: `amd64`
+
+![GitOps workflow](images/GitOps.png)
