@@ -7,8 +7,8 @@ image:
   registry: "ghcr.io"
   repository: "vanelin"
   tag: "v1.0.6-9fb92f9"
-  os: linux
-  arch: amd64
+  os: "linux"
+  arch: "amd64"
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
