@@ -1,14 +1,13 @@
 # FROM  golang:1.19 as builder
 FROM  quay.io/projectquay/golang:1.20 as builder
-ARG TARGETOS=linux
-ARG TARGETOSARCH=arm64
+ARG TARGETOS
+ARG TARGETOSARCH
+RUN echo "TARGETOS=${TARGETOS}"
+RUN echo "TARGETOSARCH=${TARGETOSARCH}"
 WORKDIR /go/src/app
 COPY . .
 # RUN make build
-
-RUN echo "I am running on $TARGETOS, building for $TARGETOSARCH" > /log
-RUN make build TARGETOS=$TARGETOS TARGETOSARCH=$TARGETOSARCH
-
+RUN make $TARGETOS TARGETOSARCH=$TARGETOSARCH
 FROM scratch
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .

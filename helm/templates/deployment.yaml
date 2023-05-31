@@ -34,7 +34,7 @@ spec:
             type: ""
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.image.registry }}/{{ .Values.image.repository }}/{{ .Chart.Name }}:{{ .Values.image.tag }}-{{ .Values.image.os }}-{{ .Values.image.arch | default "amd64"}}
+          image: {{ .Values.image.registry }}/{{ .Chart.Name }}:{{ .Values.image.tag }}-{{ .Values.image.os }}-{{ .Values.image.arch | default "amd64"}}
           env:
             - name: {{ .Values.secret.env }}
               valueFrom:

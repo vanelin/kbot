@@ -128,9 +128,7 @@ SECRET.KEY: type token for bot kbot
 1. Grant R/W permissions for workflos in repository settings/Action/General/Workflow permissions
 2. Add variables to the repository settings:
 
-    REGISTRY: `ghcr.io`
-
-    REPOSITORY: `vanelin`
+    REGISTRY: `ghcr.io/vanelin`
 
     TARGETOS: `linux`
 
