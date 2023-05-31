@@ -26,7 +26,7 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ vars.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -65,7 +65,6 @@ jobs:
       - run: |-
           echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "REGISTRY=${{ vars.REGISTRY }}" >> $GITHUB_ENV
-          echo "REPOSITORY=${{ vars.REPOSITORY }}" >> $GITHUB_ENV
           echo "TARGETOS=${{ vars.TARGETOS }}" >> $GITHUB_ENV
           echo "TARGETOSARCH=${{ vars.TARGETOSARCH }}" >> $GITHUB_ENV
 
@@ -74,7 +73,6 @@ jobs:
           cmd: |-
             yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
             yq -i '.image.registry=strenv(REGISTRY)' helm/values.yaml
-            yq -i '.image.repository=strenv(REPOSITORY)' helm/values.yaml
             yq -i '.image.os=strenv(TARGETOS)' helm/values.yaml
             yq -i '.image.arch=strenv(TARGETOSARCH)' helm/values.yaml
       - run: |-
