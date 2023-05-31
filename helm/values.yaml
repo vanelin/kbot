@@ -4,8 +4,7 @@
 
 replicaCount: 1
 image:
-  registry: "ghcr.io"
-  repository: "vanelin"
+  registry: "ghcr.io/vanelin"
   tag: "v1.0.6-eff7221"
   os: "linux"
   arch: "amd64"

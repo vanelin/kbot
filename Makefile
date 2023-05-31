@@ -1,6 +1,5 @@
 APP=$(shell basename $(shell git remote get-url origin) |cut -d '.' -f1)
-REGISTRY ?=gcr.io
-REPOSITORY ?=minikube-385711
+REGISTRY ?=vanelin
 
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS ?=linux
@@ -22,26 +21,23 @@ build: format get
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETOSARCH} go build -v -o kbot -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=${VERSION}
 
 image:
-	docker build . -t ${REGISTRY}/${REPOSITORY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH} --build-arg TARGETOS=${TARGETOS} --build-arg TARGETOSARCH=${TARGETOSARCH} --no-cache
+	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH} --build-arg TARGETOS=${TARGETOS} --build-arg TARGETOSARCH=${TARGETOSARCH} --no-cache
 
 push:
-	docker push ${REGISTRY}/${REPOSITORY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH}
+	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH}
 
 clean:
 	rm -rf kbot
-	docker rmi ${REGISTRY}/${REPOSITORY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH}
+	docker rmi ${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETOSARCH}
 
-linux: TARGETOS=linux
-linux: build image push clean
+# linux: TARGETOS=linux
+# linux: build image push clean
 
-windows:
+linux: # Build for linucx, by default this made for arm64
+	${MAKE} build TARGETOS=linux
+
+windows: # Build for windows, by default this made for arm64
 	${MAKE} build TARGETOS=windows
-	${MAKE} image TARGETOS=windows
-	${MAKE} push TARGETOS=windows
-	${MAKE} clean TARGETOS=windows
 
-macos:
-	make build TARGETOS=darwin
-	make image TARGETOS=darwin
-	make push TARGETOS=darwin
-	make clean TARGETOS=darwin
+macos: # Build for macos, by default this made for arm64
+	${MAKE} build TARGETOS=darwin
