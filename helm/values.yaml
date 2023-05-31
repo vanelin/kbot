@@ -5,9 +5,10 @@
 replicaCount: 1
 image:
   registry: "ghcr.io/vanelin"
-  tag: "v1.0.6-eff7221"
+  tag: "v1.0.6-d4bf568"
   os: "linux"
   arch: "amd64"
+  repository: ""
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
