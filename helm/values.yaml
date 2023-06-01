@@ -5,7 +5,7 @@
 replicaCount: 1
 image:
   registry: "ghcr.io/vanelin"
-  tag: "v1.0.6-b61a22f"
+  tag: "v1.0.6-d7f10c8"
   os: "linux"
   arch: "amd64"
 secret:
