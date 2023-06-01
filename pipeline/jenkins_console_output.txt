@@ -1,0 +1,806 @@
+Started by user Jenkins Admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on macos host in /tmp/workspace/kbot
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKERHUB_CREDENTIALS or $DOCKERHUB_CREDENTIALS_PSW or $MACOSHOST_CREDENTIALS or $MACOSHOST_CREDENTIALS_PSW
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (clone)
+[Pipeline] echo
+Clone repo
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+Fetching changes from the remote Git repository
+Checking out Revision 269f9aa389c6ac508dbc9fffadb53aa4cdfddd14 (refs/remotes/origin/develop)
+Commit message: "Update version to v1.0.6-b61a22f"
+ > git rev-parse --resolve-git-dir /tmp/workspace/kbot/.git # timeout=10
+ > git config remote.origin.url https://github.com/vanelin/kbot # timeout=10
+Fetching upstream changes from https://github.com/vanelin/kbot
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.2 (Apple Git-143)'
+ > git fetch --tags --force --progress -- https://github.com/vanelin/kbot +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/develop^{commit} # timeout=10
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 269f9aa389c6ac508dbc9fffadb53aa4cdfddd14 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D develop # timeout=10
+ > git checkout -b develop 269f9aa389c6ac508dbc9fffadb53aa4cdfddd14 # timeout=10
+ > git rev-list --no-walk 269f9aa389c6ac508dbc9fffadb53aa4cdfddd14 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Login to DockerHUB)
+[Pipeline] sh
++ security unlock-keychain -p ****
+[Pipeline] sh
++ echo ****
++ docker login -u vanelin --password-stdin
+Login Succeeded
+
+Logging in with your password grants your terminal complete access to your account. 
+For better security, log in with a limited-privilege personal access token. Learn more at https://docs.docker.com/go/access-tokens/
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (test)
+[Pipeline] echo
+run test
+[Pipeline] sh
++ make test
+go test -v
+?   	github.com/vanelin/kbot	[no test files]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (build)
+[Pipeline] parallel
+[Pipeline] { (Branch: Build Linux)
+[Pipeline] { (Branch: Build Darwin)
+[Pipeline] { (Branch: Build Windows)
+[Pipeline] stage
+[Pipeline] { (Build Linux)
+[Pipeline] stage
+[Pipeline] { (Build Darwin)
+[Pipeline] stage
+[Pipeline] { (Build Windows)
+[Pipeline] echo
+Building for Linux
+[Pipeline] sh
+[Pipeline] echo
+Building for macos
+[Pipeline] sh
+[Pipeline] echo
+Building for Windows
+[Pipeline] sh
++ make image TARGETOS=linux
+docker build . -t vanelin/kbot:v1.0.6-269f9aa-linux-arm64 --build-arg TARGETOS=linux --build-arg TARGETOSARCH=arm64 --no-cache
++ make image TARGETOS=macos
+docker build . -t vanelin/kbot:v1.0.6-269f9aa-macos-arm64 --build-arg TARGETOS=macos --build-arg TARGETOSARCH=arm64 --no-cache
++ make image TARGETOS=windows
+docker build . -t vanelin/kbot:v1.0.6-269f9aa-windows-arm64 --build-arg TARGETOS=windows --build-arg TARGETOSARCH=arm64 --no-cache
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 483B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for quay.io/projectquay/golang:1.20
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 483B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for quay.io/projectquay/golang:1.20
+#1 [internal] load .dockerignore
+#1 transferring context: 2B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 483B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for quay.io/projectquay/golang:1.20
+#3 DONE 0.6s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 0.5s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#3 DONE 0.6s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#4 ...
+
+#5 [auth] library/alpine:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/alpine:latest
+#4 DONE 2.1s
+
+#6 [builder 1/6] FROM quay.io/projectquay/golang:1.20@sha256:560585b8c25399898221d10d1e6a3511280237ae7acadc2e9a9983a2d2efa65f
+#6 CACHED
+
+#7 FROM docker.io/library/alpine:latest@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 24.43kB 0.0s done
+#8 DONE 0.0s
+
+#9 [builder 2/6] RUN echo "TARGETOS=linux"
+#4 DONE 2.1s
+
+#5 [builder 1/6] FROM quay.io/projectquay/golang:1.20@sha256:560585b8c25399898221d10d1e6a3511280237ae7acadc2e9a9983a2d2efa65f
+#5 CACHED
+
+#6 FROM docker.io/library/alpine:latest@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 24.43kB 0.0s done
+#7 DONE 0.0s
+
+#8 [builder 2/6] RUN echo "TARGETOS=macos"
+#8 0.354 TARGETOS=macos
+#8 DONE 0.4s
+
+#9 [builder 3/6] RUN echo "TARGETOSARCH=arm64"
+#4 DONE 2.1s
+
+#5 [builder 1/6] FROM quay.io/projectquay/golang:1.20@sha256:560585b8c25399898221d10d1e6a3511280237ae7acadc2e9a9983a2d2efa65f
+#5 CACHED
+
+#6 FROM docker.io/library/alpine:latest@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 24.43kB 0.0s done
+#7 DONE 0.0s
+
+#8 [builder 2/6] RUN echo "TARGETOS=windows"
+#8 0.273 TARGETOS=windows
+#8 DONE 0.3s
+
+#9 [builder 3/6] RUN echo "TARGETOSARCH=arm64"
+#9 0.316 TARGETOS=linux
+#9 DONE 0.3s
+
+#10 [builder 3/6] RUN echo "TARGETOSARCH=arm64"
+#9 0.552 TARGETOSARCH=arm64
+#9 DONE 0.6s
+
+#10 [builder 4/6] WORKDIR /go/src/app
+#10 DONE 0.0s
+
+#11 [builder 5/6] COPY . .
+#11 DONE 0.0s
+#9 0.473 TARGETOSARCH=arm64
+#9 DONE 0.5s
+
+#10 [builder 4/6] WORKDIR /go/src/app
+#10 DONE 0.0s
+
+#11 [builder 5/6] COPY . .
+#11 DONE 0.0s
+
+#12 [builder 6/6] RUN make windows TARGETOSARCH=arm64
+#10 0.591 TARGETOSARCH=arm64
+#10 DONE 0.6s
+
+#11 [builder 4/6] WORKDIR /go/src/app
+#11 DONE 0.0s
+
+#12 [builder 5/6] COPY . .
+#12 DONE 0.0s
+
+#13 [builder 6/6] RUN make linux TARGETOSARCH=arm64
+
+#12 [builder 6/6] RUN make macos TARGETOSARCH=arm64
+#12 0.274 make build TARGETOS=windows
+#12 0.275 make[1]: Entering directory '/go/src/app'
+#12 0.275 gofmt -s -w ./
+#12 0.279 go get
+#13 0.284 make build TARGETOS=linux
+#13 0.285 make[1]: Entering directory '/go/src/app'
+#13 0.285 gofmt -s -w ./
+#13 0.294 go get
+#12 0.326 make build TARGETOS=darwin
+#12 0.328 make[1]: Entering directory '/go/src/app'
+#12 0.328 gofmt -s -w ./
+#12 0.332 go get
+#12 6.315 go: downloading github.com/spf13/cobra v1.7.0
+#12 6.316 go: downloading gopkg.in/telebot.v3 v3.1.3
+#12 6.448 go: downloading github.com/inconshreveable/mousetrap v1.1.0
+#12 6.450 go: downloading github.com/spf13/pflag v1.0.5
+#12 6.648 CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -v -o kbot -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.6-269f9aa
+#12 6.887 internal/goarch
+#12 6.889 internal/unsafeheader
+#12 6.889 internal/coverage/rtcov
+#12 6.895 internal/cpu
+#12 6.902 internal/abi
+#12 6.906 internal/goexperiment
+#12 6.920 internal/goos
+#12 6.923 runtime/internal/math
+#12 6.947 runtime/internal/sys
+#12 6.952 internal/itoa
+#12 6.979 math/bits
+#12 6.992 unicode/utf8
+#13 6.165 go: downloading github.com/spf13/cobra v1.7.0
+#13 6.169 go: downloading gopkg.in/telebot.v3 v3.1.3
+#13 6.297 go: downloading github.com/spf13/pflag v1.0.5
+#13 6.304 go: downloading github.com/inconshreveable/mousetrap v1.1.0
+#13 6.510 CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -v -o kbot -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.6-269f9aa
+#13 6.588 internal/goarch
+#13 6.592 internal/unsafeheader
+#13 6.593 internal/coverage/rtcov
+#13 6.593 internal/cpu
+#13 6.604 internal/abi
+#13 6.607 internal/goexperiment
+#13 6.626 internal/goos
+#13 6.638 runtime/internal/math
+#13 6.645 runtime/internal/sys
+#13 6.667 runtime/internal/syscall
+#13 6.683 internal/itoa
+#13 6.704 internal/bytealg
+#13 6.723 runtime/internal/atomic
+#13 6.730 math/bits
+#13 6.754 unicode/utf8
+#13 6.815 math
+#13 6.840 internal/race
+#13 6.863 sync/atomic
+#13 6.887 unicode
+#12 6.146 go: downloading github.com/spf13/cobra v1.7.0
+#12 6.146 go: downloading gopkg.in/telebot.v3 v3.1.3
+#12 6.317 go: downloading github.com/inconshreveable/mousetrap v1.1.0
+#12 6.326 go: downloading github.com/spf13/pflag v1.0.5
+#12 6.503 CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -v -o kbot -ldflags "-X="github.com/vanelin/kbot/cmd.appVersion=v1.0.6-269f9aa
+#12 6.572 internal/coverage/rtcov
+#12 6.573 internal/goarch
+#12 6.577 internal/unsafeheader
+#12 6.581 internal/cpu
+#12 6.583 internal/goexperiment
+#12 6.589 internal/abi
+#12 6.595 internal/goos
+#12 6.596 runtime/internal/math
+#12 6.614 internal/itoa
+#12 6.620 runtime/internal/sys
+#12 6.640 math/bits
+#12 6.649 unicode/utf8
+#12 6.661 internal/race
+#12 6.664 internal/bytealg
+#12 6.696 runtime/internal/atomic
+#12 6.716 math
+#12 6.729 sync/atomic
+#12 6.836 unicode
+#12 6.866 encoding
+#12 6.898 runtime
+#12 6.939 internal/nettrace
+#12 6.965 unicode/utf16
+#12 7.024 crypto/internal/alias
+#12 7.053 crypto/subtle
+#12 7.000 internal/race
+#12 7.024 internal/bytealg
+#12 7.032 runtime/internal/atomic
+#12 7.093 sync/atomic
+#12 7.103 math
+#12 7.211 unicode
+#12 7.223 internal/syscall/windows/sysdll
+#12 7.237 unicode/utf16
+#12 7.277 encoding
+#12 7.321 runtime
+#13 6.996 encoding
+#13 7.008 runtime
+#13 7.037 internal/nettrace
+#13 7.068 unicode/utf16
+#13 7.162 crypto/internal/alias
+#13 7.214 crypto/subtle
+#12 7.195 crypto/internal/boring/sig
+#12 7.247 container/list
+#12 7.339 internal/nettrace
+#12 7.422 container/list
+#12 7.484 crypto/internal/alias
+#12 7.515 crypto/subtle
+#13 7.351 crypto/internal/boring/sig
+#13 7.448 container/list
+#13 7.486 vendor/golang.org/x/crypto/cryptobyte/asn1
+#12 7.369 vendor/golang.org/x/crypto/cryptobyte/asn1
+#12 7.381 vendor/golang.org/x/crypto/internal/alias
+#12 7.599 crypto/internal/boring/sig
+#12 7.671 vendor/golang.org/x/crypto/cryptobyte/asn1
+#12 7.716 vendor/golang.org/x/crypto/internal/alias
+#13 7.508 vendor/golang.org/x/crypto/internal/alias
+#12 10.20 internal/reflectlite
+#12 10.20 sync
+#12 10.30 internal/testlog
+#12 10.30 internal/singleflight
+#12 10.30 internal/godebug
+#12 10.36 internal/intern
+#12 10.37 math/rand
+#12 10.59 errors
+#12 10.60 sort
+#12 10.64 internal/oserror
+#12 10.64 io
+#12 10.64 strconv
+#12 10.74 syscall
+#12 10.77 internal/safefilepath
+#12 10.82 path
+#12 10.86 bytes
+#12 10.49 sync
+#12 10.49 internal/reflectlite
+#12 10.64 internal/testlog
+#12 10.64 internal/godebug
+#12 10.64 internal/singleflight
+#12 10.70 internal/intern
+#12 10.70 math/rand
+#13 10.35 internal/reflectlite
+#13 10.35 sync
+#13 10.52 internal/godebug
+#13 10.52 internal/singleflight
+#13 10.52 internal/testlog
+#13 10.61 internal/intern
+#13 10.61 math/rand
+#13 10.83 errors
+#13 10.83 sort
+#13 10.90 strconv
+#13 10.90 io
+#13 10.90 internal/oserror
+#13 10.94 syscall
+#12 10.92 strings
+#12 11.06 errors
+#12 11.06 sort
+#12 11.10 io
+#12 11.10 internal/oserror
+#12 11.10 strconv
+#12 11.17 syscall
+#12 11.23 path
+#13 11.07 internal/safefilepath
+#13 11.08 path
+#13 11.10 bytes
+#13 11.18 strings
+#12 11.19 vendor/golang.org/x/net/dns/dnsmessage
+#12 11.22 reflect
+#12 11.33 vendor/golang.org/x/net/dns/dnsmessage
+#12 11.37 bytes
+#12 11.34 bufio
+#12 11.72 strings
+#13 11.54 vendor/golang.org/x/net/dns/dnsmessage
+#13 11.61 reflect
+#13 11.71 bufio
+#12 11.64 net/netip
+#12 11.91 reflect
+#13 12.02 net/netip
+#12 11.97 hash
+#12 12.00 crypto
+#12 12.06 crypto/internal/randutil
+#12 12.15 bufio
+#12 12.26 net/netip
+#12 12.14 hash/crc32
+#12 12.26 crypto/internal/nistec/fiat
+#12 12.31 internal/syscall/unix
+#12 12.49 crypto/internal/randutil
+#12 12.53 hash
+#12 12.33 time
+#12 12.48 internal/syscall/execenv
+#12 12.50 crypto/rc4
+#12 12.58 vendor/golang.org/x/text/transform
+#13 12.43 hash
+#13 12.46 crypto
+#13 12.49 internal/syscall/unix
+#13 12.50 time
+#13 12.54 internal/syscall/execenv
+#13 12.56 crypto/internal/randutil
+#13 12.61 hash/crc32
+#13 12.61 crypto/internal/nistec/fiat
+#12 12.59 hash/crc32
+#12 12.79 crypto
+#12 12.76 net/http/internal/ascii
+#12 12.79 regexp/syntax
+#13 12.74 crypto/rc4
+#13 12.80 vendor/golang.org/x/text/transform
+#13 12.93 net/http/internal/ascii
+#12 12.85 crypto/rc4
+#12 12.85 crypto/internal/nistec/fiat
+#12 12.93 vendor/golang.org/x/text/transform
+#12 12.95 internal/syscall/windows
+#13 12.98 regexp/syntax
+#12 13.11 internal/syscall/windows/registry
+#12 13.12 internal/safefilepath
+#12 13.18 internal/syscall/execenv
+#12 13.22 github.com/inconshreveable/mousetrap
+#12 13.26 net/http/internal/ascii
+#12 13.28 time
+#12 13.30 regexp/syntax
+#12 13.54 internal/poll
+#12 14.05 io/fs
+#13 13.93 internal/poll
+#12 14.08 context
+#12 14.22 crypto/x509/internal/macos
+#12 14.25 regexp
+#12 14.28 os
+#13 14.28 io/fs
+#12 14.60 regexp
+#12 14.44 embed
+#12 14.47 internal/fmtsort
+#12 14.54 encoding/binary
+#13 14.42 context
+#12 14.88 io/fs
+#12 14.89 internal/poll
+#13 14.59 regexp
+#13 14.63 embed
+#13 14.63 os
+#13 14.76 internal/fmtsort
+#13 14.76 encoding/binary
+#12 15.07 internal/fmtsort
+#12 15.08 context
+#12 15.14 encoding/binary
+#12 15.21 embed
+#13 15.06 encoding/base64
+#13 15.06 crypto/cipher
+#13 15.11 crypto/internal/edwards25519/field
+#12 14.96 crypto/cipher
+#12 14.96 crypto/internal/edwards25519/field
+#12 14.96 encoding/base64
+#12 14.98 fmt
+#12 15.15 vendor/golang.org/x/net/route
+#12 15.19 path/filepath
+#12 15.44 os
+#12 15.55 encoding/base64
+#13 15.32 crypto/internal/boring
+#13 15.34 crypto/des
+#13 15.41 crypto/aes
+#12 15.20 io/ioutil
+#12 15.25 crypto/internal/boring
+#12 15.32 crypto/aes
+#12 15.46 net
+#12 15.55 crypto/internal/edwards25519/field
+#12 15.55 crypto/cipher
+#12 15.68 crypto/internal/nistec
+#12 15.76 crypto/internal/boring
+#12 15.82 crypto/aes
+#13 15.43 crypto/internal/nistec
+#13 15.44 crypto/sha512
+#13 15.46 fmt
+#12 15.50 crypto/des
+#12 15.89 crypto/des
+#13 15.65 net
+#13 15.80 path/filepath
+#12 15.69 crypto/internal/nistec
+#12 15.80 crypto/sha512
+#12 16.04 crypto/sha512
+#12 16.14 crypto/internal/edwards25519
+#13 16.15 io/ioutil
+#12 15.95 crypto/internal/edwards25519
+#12 16.01 encoding/csv
+#12 16.17 encoding/hex
+#12 16.28 crypto/hmac
+#12 16.31 fmt
+#12 16.36 net
+#12 16.55 path/filepath
+#13 16.19 crypto/internal/edwards25519
+#13 16.26 crypto/ecdh
+#13 16.36 encoding/csv
+#12 16.26 flag
+#12 16.39 net/url
+#12 16.58 io/ioutil
+#12 16.67 crypto/ecdh
+#12 16.78 crypto/md5
+#13 16.37 encoding/hex
+#13 16.49 flag
+#13 16.52 net/url
+#12 16.51 text/template/parse
+#12 16.57 encoding/json
+#12 16.70 log
+#12 16.85 crypto/sha1
+#12 16.95 crypto/sha256
+#12 17.06 encoding/pem
+#13 16.75 text/template/parse
+#12 16.81 math/big
+#12 17.11 vendor/golang.org/x/crypto/chacha20
+#12 17.14 vendor/golang.org/x/crypto/internal/poly1305
+#12 17.26 vendor/golang.org/x/crypto/hkdf
+#12 17.30 encoding/csv
+#12 17.34 encoding/hex
+#13 16.96 encoding/json
+#13 17.00 log
+#12 17.42 flag
+#12 17.48 net/url
+#13 17.23 math/big
+#12 17.55 text/template/parse
+#12 17.64 encoding/json
+#13 17.57 text/template
+#12 17.86 log
+#12 18.11 math/big
+#12 17.92 text/template
+#12 18.28 mime
+#13 18.39 mime
+#12 18.54 text/template
+#12 18.86 mime
+#13 18.92 mime/quotedprintable
+#13 18.96 crypto/rand
+#13 19.05 compress/flate
+#13 19.15 crypto/elliptic
+#13 19.16 crypto/internal/bigmod
+#13 19.24 github.com/spf13/pflag
+#12 19.31 mime/quotedprintable
+#12 19.39 compress/flate
+#12 19.02 mime/quotedprintable
+#12 19.17 crypto/rand
+#12 19.27 compress/flate
+#13 19.36 net/textproto
+#13 19.45 crypto/internal/boring/bbig
+#13 19.48 encoding/asn1
+#12 19.65 net/textproto
+#12 19.28 crypto/ecdh
+#12 19.29 crypto/elliptic
+#12 19.41 github.com/spf13/pflag
+#12 19.49 net/textproto
+#13 19.63 mime/multipart
+#12 19.65 github.com/spf13/pflag
+#12 19.61 crypto/internal/bigmod
+#13 19.67 compress/gzip
+#13 19.87 crypto/ed25519
+#12 20.08 vendor/golang.org/x/crypto/chacha20poly1305
+#12 19.76 mime/multipart
+#12 19.77 compress/gzip
+#12 19.87 crypto/internal/boring/bbig
+#12 19.93 encoding/asn1
+#12 19.97 crypto/ed25519
+#12 20.08 crypto/hmac
+#13 19.97 crypto/hmac
+#13 19.98 crypto/md5
+#13 20.00 vendor/golang.org/x/crypto/cryptobyte
+#13 20.02 crypto/rsa
+#13 20.15 crypto/sha1
+#12 20.24 vendor/golang.org/x/text/unicode/bidi
+#12 20.36 compress/gzip
+#12 20.49 vendor/golang.org/x/text/unicode/norm
+#12 20.17 crypto/md5
+#13 20.40 crypto/ecdsa
+#13 20.50 crypto/sha256
+#12 20.62 crypto/rand
+#12 20.25 crypto/rsa
+#12 20.26 crypto/sha1
+#12 20.52 crypto/sha256
+#13 20.51 crypto/dsa
+#12 20.72 mime/multipart
+#12 20.83 crypto/elliptic
+#12 20.69 crypto/dsa
+#12 20.77 encoding/pem
+#13 20.67 crypto/x509/pkix
+#13 20.68 encoding/pem
+#13 20.92 vendor/golang.org/x/crypto/chacha20
+#12 21.11 crypto/internal/bigmod
+#12 20.91 vendor/golang.org/x/crypto/chacha20
+#12 20.93 vendor/golang.org/x/crypto/cryptobyte
+#12 20.98 crypto/x509/pkix
+#13 20.95 vendor/golang.org/x/crypto/internal/poly1305
+#13 21.01 github.com/spf13/cobra
+#13 21.11 crypto/x509
+#13 21.20 vendor/golang.org/x/crypto/hkdf
+#12 21.32 crypto/internal/boring/bbig
+#12 21.40 encoding/asn1
+#12 21.42 crypto/ed25519
+#12 21.51 crypto/rsa
+#12 21.08 vendor/golang.org/x/crypto/internal/poly1305
+#12 21.23 vendor/golang.org/x/crypto/hkdf
+#12 21.28 github.com/spf13/cobra
+#12 21.28 crypto/ecdsa
+#12 21.29 vendor/golang.org/x/crypto/chacha20poly1305
+#12 21.33 vendor/golang.org/x/text/unicode/bidi
+#13 21.21 vendor/golang.org/x/crypto/chacha20poly1305
+#13 21.28 vendor/golang.org/x/text/unicode/bidi
+#13 21.33 vendor/golang.org/x/text/unicode/norm
+#12 21.58 github.com/spf13/cobra
+#12 21.41 vendor/golang.org/x/text/unicode/norm
+#12 21.67 crypto/dsa
+#12 21.74 vendor/golang.org/x/text/secure/bidirule
+#12 21.87 vendor/golang.org/x/net/http2/hpack
+#12 21.76 vendor/golang.org/x/text/secure/bidirule
+#12 21.78 crypto/x509
+#12 22.13 net/http/internal
+#12 22.13 vendor/golang.org/x/net/idna
+#12 22.17 vendor/golang.org/x/crypto/cryptobyte
+#12 22.22 crypto/x509/pkix
+#13 22.04 vendor/golang.org/x/text/secure/bidirule
+#12 21.93 vendor/golang.org/x/net/http2/hpack
+#13 22.16 vendor/golang.org/x/net/http2/hpack
+#12 22.18 net/http/internal
+#13 22.38 net/http/internal
+#12 22.67 crypto/ecdsa
+#12 22.78 vendor/golang.org/x/net/http/httpproxy
+#13 22.63 crypto/tls
+#13 22.65 vendor/golang.org/x/net/idna
+#12 22.78 vendor/golang.org/x/net/http/httpguts
+#12 22.89 crypto/x509
+#12 22.83 vendor/golang.org/x/net/idna
+#12 22.90 crypto/tls
+#13 23.05 vendor/golang.org/x/net/http/httpproxy
+#13 23.05 vendor/golang.org/x/net/http/httpguts
+#12 23.46 crypto/tls
+#12 23.23 vendor/golang.org/x/net/http/httpproxy
+#12 23.23 vendor/golang.org/x/net/http/httpguts
+#13 23.80 net/http/httptrace
+#13 23.85 net/http
+#12 24.04 net/http/httptrace
+#12 24.08 net/http
+#12 24.34 net/http/httptrace
+#12 24.39 net/http
+#12 26.40 gopkg.in/telebot.v3
+#13 26.00 gopkg.in/telebot.v3
+#12 26.13 gopkg.in/telebot.v3
+#13 26.54 github.com/vanelin/kbot/cmd
+#13 26.58 github.com/vanelin/kbot
+#12 26.72 github.com/vanelin/kbot/cmd
+#12 26.77 github.com/vanelin/kbot
+#12 27.01 github.com/vanelin/kbot/cmd
+#12 27.04 github.com/vanelin/kbot
+#13 27.11 make[1]: Leaving directory '/go/src/app'
+#13 DONE 27.3s
+
+#14 [stage-1 1/3] COPY --from=builder /go/src/app/kbot .
+#14 DONE 0.0s
+#12 27.64 make[1]: Leaving directory '/go/src/app'
+#12 DONE 27.7s
+
+#13 [stage-1 1/3] COPY --from=builder /go/src/app/kbot .
+#13 DONE 0.1s
+
+#14 [stage-1 2/3] COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+#14 DONE 0.0s
+#12 27.57 make[1]: Leaving directory '/go/src/app'
+#12 DONE 27.6s
+
+#15 [stage-1 2/3] COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+#15 DONE 0.0s
+
+#16 exporting to image
+#16 exporting layers 0.1s done
+#16 writing image sha256:30fd74a8c21d3b4e52a5e059e5f3605d755bd56307c17d963a7e85435d5e7885
+#16 writing image sha256:30fd74a8c21d3b4e52a5e059e5f3605d755bd56307c17d963a7e85435d5e7885 done
+#16 naming to docker.io/vanelin/kbot:v1.0.6-269f9aa-linux-arm64 done
+#16 DONE 0.1s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 writing image sha256:5354dc275a1f125da3872edf3b3f1b4cea07a58a733ef9984586cce991048db9 done
+#15 naming to docker.io/vanelin/kbot:v1.0.6-269f9aa-windows-arm64 done
+#15 DONE 0.1s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+
+#13 [stage-1 1/3] COPY --from=builder /go/src/app/kbot .
+#13 DONE 0.0s
+
+#14 [stage-1 2/3] COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+#14 DONE 0.0s
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 writing image sha256:777acf17de943e3a635127866c443c1f923b6e76b7baba267529f1157de052e2
+#15 writing image sha256:777acf17de943e3a635127866c443c1f923b6e76b7baba267529f1157de052e2 done
+#15 naming to docker.io/vanelin/kbot:v1.0.6-269f9aa-macos-arm64 done
+#15 DONE 0.1s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (push)
+[Pipeline] parallel
+[Pipeline] { (Branch: Push Linux to dockerhub)
+[Pipeline] { (Branch: Push Darwin to dockerhub)
+[Pipeline] { (Branch: Push Windows to dockerhub)
+[Pipeline] stage
+[Pipeline] { (Push Linux to dockerhub)
+[Pipeline] stage
+[Pipeline] { (Push Darwin to dockerhub)
+[Pipeline] stage
+[Pipeline] { (Push Windows to dockerhub)
+[Pipeline] sh
+[Pipeline] sh
+[Pipeline] sh
++ make push TARGETOS=linux
+docker push vanelin/kbot:v1.0.6-269f9aa-linux-arm64
++ make push TARGETOS=macos
+docker push vanelin/kbot:v1.0.6-269f9aa-macos-arm64
++ make push TARGETOS=windows
+docker push vanelin/kbot:v1.0.6-269f9aa-windows-arm64
+The push refers to repository [docker.io/vanelin/kbot]
+The push refers to repository [docker.io/vanelin/kbot]
+The push refers to repository [docker.io/vanelin/kbot]
+16330991999d: Preparing
+1d073effc0d5: Preparing
+16330991999d: Preparing
+a82619705548: Preparing
+16330991999d: Preparing
+5a2455ad591f: Preparing
+16330991999d: Pushed
+16330991999d: Pushed
+16330991999d: Pushed
+a82619705548: Pushed
+1d073effc0d5: Pushed
+5a2455ad591f: Pushed
+v1.0.6-269f9aa-macos-arm64: digest: sha256:ef5694a405852af3764bcd57902d37c176d4d5416710d5d2195af6cc4d3f4b14 size: 738
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+v1.0.6-269f9aa-linux-arm64: digest: sha256:8ab9138ba85de973954fe5991e83fc3046fff9bcd1f090ef31b0cb0770235837 size: 738
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+v1.0.6-269f9aa-windows-arm64: digest: sha256:8eb46f192bf9d39bb253e6c91480c60c6207550b64af85de64c6fa98728a2da9 size: 738
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (clean)
+[Pipeline] parallel
+[Pipeline] { (Branch: Clean Linux image on MacOS host )
+[Pipeline] { (Branch: Clean Darwin image on MacOS host)
+[Pipeline] { (Branch: Clean Windows image on MacOS host)
+[Pipeline] stage
+[Pipeline] { (Clean Linux image on MacOS host )
+[Pipeline] stage
+[Pipeline] { (Clean Darwin image on MacOS host)
+[Pipeline] stage
+[Pipeline] { (Clean Windows image on MacOS host)
+[Pipeline] sh
+[Pipeline] sh
+[Pipeline] sh
++ make clean TARGETOS=linux
+rm -rf kbot
+docker rmi vanelin/kbot:v1.0.6-269f9aa-linux-arm64
+Untagged: vanelin/kbot:v1.0.6-269f9aa-linux-arm64
+Untagged: vanelin/kbot@sha256:8ab9138ba85de973954fe5991e83fc3046fff9bcd1f090ef31b0cb0770235837
+Deleted: sha256:30fd74a8c21d3b4e52a5e059e5f3605d755bd56307c17d963a7e85435d5e7885
+[Pipeline] }
++ make clean TARGETOS=macos
+rm -rf kbot
+docker rmi vanelin/kbot:v1.0.6-269f9aa-macos-arm64
+Untagged: vanelin/kbot:v1.0.6-269f9aa-macos-arm64
+Untagged: vanelin/kbot@sha256:ef5694a405852af3764bcd57902d37c176d4d5416710d5d2195af6cc4d3f4b14
+Deleted: sha256:777acf17de943e3a635127866c443c1f923b6e76b7baba267529f1157de052e2
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] }
++ make clean TARGETOS=windows
+rm -rf kbot
+docker rmi vanelin/kbot:v1.0.6-269f9aa-windows-arm64
+Untagged: vanelin/kbot:v1.0.6-269f9aa-windows-arm64
+Untagged: vanelin/kbot@sha256:8eb46f192bf9d39bb253e6c91480c60c6207550b64af85de64c6fa98728a2da9
+Deleted: sha256:5354dc275a1f125da3872edf3b3f1b4cea07a58a733ef9984586cce991048db9
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // parallel
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
