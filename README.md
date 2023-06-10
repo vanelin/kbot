@@ -132,6 +132,6 @@ SECRET.KEY: type token for bot kbot
 
     TARGETOS: `linux`
 
-    TARGETOSARCH: `amd64`
+    TARGETOSARCH: `arm64`
 
 ![GitOps workflow](images/GitOps.png)
