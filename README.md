@@ -81,7 +81,7 @@ $ make windows TARGETOSARCH=arm64
 | **`amd64`**       |  ✅      | ✅       | ✅         | **`amd64`**      |
 | **`arm`**         |          | ✅       | ✅         | **`arm`**        |
 | **`arm64`**       | ✅       | ✅       | ✅         | **`arm64`**      |
-|  |  **`darwin`** | **`linux`** | **`windows`** |  |
+|  |  **`macos`** | **`linux`** | **`windows`** |  |
 
 # Kbot Chart
 A Helm chart for Kbot, a declarative, GitOps continuous delivery tool for Kubernetes.
@@ -116,8 +116,8 @@ SECRET.KEY: type token for bot kbot
 |-----|------|---------|
 | image.repository | string | `"gcr.io/minikube-385711"` |
 | image.tag | string | `"v1.0.5-a11547b"` |
-| image.tag  | string | `"arm64"` |
-| image.tag  | string | `"arm64"` | 
+| image.os  | string | `"linux"` |
+| image.arch  | string | `"arm64"` | 
 | secret.name  | string | `"kbot"` |
 | secret.env  | string | `"TELE_TOKEN"` |
 | secret.key  | string | `"your_token"` |
@@ -132,6 +132,6 @@ SECRET.KEY: type token for bot kbot
 
     TARGETOS: `linux`
 
-    TARGETOSARCH: `amd64`
+    TARGETOSARCH: `arm64`
 
 ![GitOps workflow](images/GitOps.png)
