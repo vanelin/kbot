@@ -7,11 +7,11 @@
 
 - [Install the `curl`](https://everything.curl.dev/get)
 
-- Install the wget
+- Install the `wget`
 
 - [Using a central config Gitleaks](https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml)
 
-- Tested on maos and linux
+- Tested on `maos` and `linux`
 
 ## Installation notes
 
@@ -32,4 +32,4 @@ You now have the gitleaks pre-commit hook enabled globally.
 - `make detect` - detect secrets in code
 - `make version` - displaying the installed version of gitleaks
 
-[![gitleaks]()
+[![gitleaks](https://asciinema.org/a/591296.svg)](https://asciinema.org/a/591296)
