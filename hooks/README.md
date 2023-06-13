@@ -11,7 +11,7 @@
 
 - [Using a central config Gitleaks](https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml)
 
-- Tested on `maos` and `linux`
+- Tested on `maos` *arm64/x64* and `linux` *arm64/x64*
 
 ## Installation notes
 

@@ -2,7 +2,12 @@
 
 GITLEAKS_DOWNLOAD_DIR="${HOME}/bin/gitleaks-files"
 TARGETOS ?=$(shell uname -s | tr '[:upper:]' '[:lower:]')
-TARGETARCH ?=$(shell uname -m)
+ifeq ($(shell uname -m), x86_64)
+	TARGETARCH="x64"
+else
+	TARGETARCH=$(shell uname -m)
+endif
+
 URL=$(shell curl -sSfL https://api.github.com/repos/zricethezav/gitleaks/releases/latest |\
 	grep browser_download_url |\
 	cut -d '"' -f 4 |\
