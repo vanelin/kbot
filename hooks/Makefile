@@ -43,7 +43,8 @@ detect:
 	${GITLEAKS} detect -v
 
 ${PATTERNS}: ${GIT_SUPPORT_PATH}
-	wget -q -O $@ https://raw.githubusercontent.com/zricethezav/gitleaks/master/config/gitleaks.toml
+#	wget -q -O $@ https://raw.githubusercontent.com/zricethezav/gitleaks/master/config/gitleaks.toml
+	curl -sSfL -o $@ https://raw.githubusercontent.com/zricethezav/gitleaks/master/config/gitleaks.toml
 
 ${PRECOMMIT}: pre-commit.sh ${HOOKS}
 	install -m 0755 -cv $< $@
@@ -53,7 +54,8 @@ ${GIT_SUPPORT_PATH} ${HOOKS}:
 
 ${GITLEAKS}:
 	mkdir -p ${GITLEAKS_DOWNLOAD_DIR}
-	wget -q ${URL} -O - | tar -xzf - -C ${GITLEAKS_DOWNLOAD_DIR}
+#	wget -q ${URL} -O - | tar -xzf - -C ${GITLEAKS_DOWNLOAD_DIR}
+	curl -sSfL ${URL} | tar -xzf - -C ${GITLEAKS_DOWNLOAD_DIR}
 	cp ${GITLEAKS_DOWNLOAD_DIR}/gitleaks ${GITLEAKS}
 	rm -rf ${GITLEAKS_DOWNLOAD_DIR}
 	chmod 755 $@

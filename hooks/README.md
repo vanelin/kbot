@@ -7,8 +7,6 @@
 
 - [Install the `curl`](https://everything.curl.dev/get)
 
-- Install the `wget`
-
 - [Using a central config Gitleaks](https://raw.githubusercontent.com/gitleaks/gitleaks/master/config/gitleaks.toml)
 
 - Tested on `maos` *arm64/x64* and `linux` *arm64/x64*
