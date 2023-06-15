@@ -1,5 +1,3 @@
-#!/bin/sh
-
 GITLEAKS_DOWNLOAD_DIR="${HOME}/bin/gitleaks-files"
 TARGETOS ?=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 ifeq ($(shell uname -m), x86_64)
