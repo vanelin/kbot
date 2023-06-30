@@ -4,8 +4,11 @@ Copyright © 2023 NAME HERE <ivan.voloboyev@gmail.com>
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -52,13 +55,85 @@ to quickly create a Cobra application.`,
 				err = m.Send(fmt.Sprintf("Hello I'm Kbot %s!", appVersion))
 			case "ping":
 				err = m.Send(fmt.Sprintln("Pong"))
+			case "bitcoin":
+				marketMsg := getMarkets("bitcoin")
+				err = m.Send(marketMsg)
+			case "ethereum":
+				marketMsg := getMarkets("ethereum")
+				err = m.Send(marketMsg)
 			}
-
 			return err
 		})
 
 		kbot.Start()
 	},
+}
+
+type CryptoData struct {
+	Id                string `json:"id"`
+	Rank              string `json:"rank"`
+	Symbol            string `json:"symbol"`
+	Name              string `json:"name"`
+	Supply            string `json:"supply"`
+	MaxSupply         string `json:"maxSupply"`
+	MarketCapUsd      string `json:"marketCapUsd"`
+	VolumeUsd24Hr     string `json:"volumeUsd24Hr"`
+	PriceUsd          string `json:"priceUsd"`
+	ChangePercent24Hr string `json:"changePercent24Hr"`
+	Vwap24Hr          string `json:"vwap24Hr"`
+}
+
+type MarketResponse struct {
+	Data []MarketData `json:"data"`
+}
+
+type MarketData struct {
+	ExchangeId    string `json:"exchangeId"`
+	BaseId        string `json:"baseId"`
+	QuoteId       string `json:"quoteId"`
+	QuoteSymbol   string `json:"quoteSymbol"`
+	VolumeUsd24Hr string `json:"volumeUsd24Hr"`
+	PriceUsd      string `json:"priceUsd"`
+	VolumePercent string `json:"volumePercent"`
+}
+
+func getMarkets(currency string) string {
+	fmt.Println("Getting markets for ", currency)
+	coincapApiUrl := "https://api.coincap.io/v2/assets/" + currency + "/markets?limit=20"
+
+	client := http.Client{}
+
+	req, err := http.NewRequest("GET", coincapApiUrl, nil)
+
+	if err != nil {
+		log.Printf("Error creating request: %v", err)
+		return "Error creating request"
+	}
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		log.Printf("Error sending request: %v", err)
+		return "Error sending request"
+	}
+
+	defer res.Body.Close()
+
+	respBody, err := io.ReadAll(res.Body)
+
+	if err != nil {
+		log.Printf("Error reading response body: %v", err)
+		return "Error reading response body"
+	}
+
+	var data MarketResponse
+	json.Unmarshal(respBody, &data)
+
+	var marketsInfo string
+	for _, market := range data.Data {
+		marketsInfo += fmt.Sprintf("\n\nExchange: %s\nBase: %s\nQuote: %s\nPrice: $%s\nVolume: %s\nVolume Percent: %s\n", market.ExchangeId, market.BaseId, market.QuoteSymbol, market.PriceUsd, market.VolumeUsd24Hr, market.VolumePercent)
+	}
+	return marketsInfo
 }
 
 func init() {
