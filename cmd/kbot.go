@@ -4,22 +4,72 @@ Copyright © 2023 NAME HERE <ivan.voloboyev@gmail.com>
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/spf13/cobra"
+
+	"github.com/hirosassa/zerodriver"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
+	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/otel/sdk/resource"
+	semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
 	telebot "gopkg.in/telebot.v3"
 )
 
 var (
 	// TeleToken bot
 	TeleToken = os.Getenv("TELE_TOKEN")
+	// MetricsHost exporter host:port
+	MetricsHost = os.Getenv("METRICS_HOST")
 )
+
+// Initialize OpenTelemetry
+func initMetrics(ctx context.Context) {
+
+	// Create a new OTLP Metric gRPC exporter with the specified endpoint and options
+	exporter, _ := otlpmetricgrpc.New(
+		ctx,
+		otlpmetricgrpc.WithEndpoint(MetricsHost),
+		otlpmetricgrpc.WithInsecure(),
+	)
+
+	// Define the resource with attributes that are common to all metrics.
+	// labels/tags/resources that are common to all metrics.
+	resource := resource.NewWithAttributes(
+		semconv.SchemaURL,
+		semconv.ServiceNameKey.String(fmt.Sprintf("kbot_%s", appVersion)),
+	)
+
+	// Create a new MeterProvider with the specified resource and reader
+	mp := sdkmetric.NewMeterProvider(
+		sdkmetric.WithResource(resource),
+		sdkmetric.WithReader(
+			// collects and exports metric data every 10 seconds.
+			sdkmetric.NewPeriodicReader(exporter, sdkmetric.WithInterval(10*time.Second)),
+		),
+	)
+
+	// Set the global MeterProvider to the newly created MeterProvider
+	otel.SetMeterProvider(mp)
+}
+
+func pmetrics(ctx context.Context, payload string) {
+	// Get the global MeterProvider and create a new Meter with the name "kbot_crypto_counter"
+	meter := otel.GetMeterProvider().Meter("kbot_crypto_counter")
+
+	// Get or create an Int64Counter instrument with the name "kbot_crypto_counter_<payload>"
+	counter, _ := meter.Int64Counter(fmt.Sprintf("kbot_crypto_counter_%s", payload))
+
+	// Add a value of 1 to the Int64Counter
+	counter.Add(ctx, 1)
+}
 
 // kbotCmd represents the kbot command
 var kbotCmd = &cobra.Command{
@@ -33,8 +83,8 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		logger := zerodriver.NewProductionLogger()
 
-		fmt.Printf("kbot %s started", appVersion)
 		kbot, err := telebot.NewBot(telebot.Settings{
 			URL:    "",
 			Token:  TeleToken,
@@ -42,15 +92,20 @@ to quickly create a Cobra application.`,
 		})
 
 		if err != nil {
-			log.Fatalf("Please check TELE_TOKEN env varible. %s", err)
+			logger.Fatal().Str("Error", err.Error()).Msg("Please check TELE_TOKEN")
 			return
+		} else {
+			logger.Info().Str("Version", appVersion).Msg("kbot started")
+
 		}
 
 		kbot.Handle(telebot.OnText, func(m telebot.Context) error {
-			log.Print(m.Message().Payload, m.Text())
-			playload := m.Message().Payload
+			logger.Info().Str("Payload", m.Text()).Msg(m.Message().Payload)
 
-			switch playload {
+			payload := m.Message().Payload
+			pmetrics(context.Background(), payload)
+
+			switch payload {
 			case "hello":
 				err = m.Send(fmt.Sprintf("Hello I'm Kbot %s!", appVersion))
 			case "ping":
@@ -69,20 +124,6 @@ to quickly create a Cobra application.`,
 	},
 }
 
-type CryptoData struct {
-	Id                string `json:"id"`
-	Rank              string `json:"rank"`
-	Symbol            string `json:"symbol"`
-	Name              string `json:"name"`
-	Supply            string `json:"supply"`
-	MaxSupply         string `json:"maxSupply"`
-	MarketCapUsd      string `json:"marketCapUsd"`
-	VolumeUsd24Hr     string `json:"volumeUsd24Hr"`
-	PriceUsd          string `json:"priceUsd"`
-	ChangePercent24Hr string `json:"changePercent24Hr"`
-	Vwap24Hr          string `json:"vwap24Hr"`
-}
-
 type MarketResponse struct {
 	Data []MarketData `json:"data"`
 }
@@ -98,22 +139,23 @@ type MarketData struct {
 }
 
 func getMarkets(currency string) string {
-	fmt.Println("Getting markets for ", currency)
-	coincapApiUrl := "https://api.coincap.io/v2/assets/" + currency + "/markets?limit=20"
+	logger := zerodriver.NewProductionLogger()
+	logger.Info().Str("Currency", currency).Msg("Getting price for currency")
+	coincapApiUrl := "https://api.coincap.io/v2/assets/" + currency + "/markets?limit=10"
 
 	client := http.Client{}
 
 	req, err := http.NewRequest("GET", coincapApiUrl, nil)
 
 	if err != nil {
-		log.Printf("Error creating request: %v", err)
+		logger.Fatal().Str("Error", err.Error()).Msg("Error creating request")
 		return "Error creating request"
 	}
 
 	res, err := client.Do(req)
 
 	if err != nil {
-		log.Printf("Error sending request: %v", err)
+		logger.Fatal().Str("Error", err.Error()).Msg("Error sending request")
 		return "Error sending request"
 	}
 
@@ -122,7 +164,7 @@ func getMarkets(currency string) string {
 	respBody, err := io.ReadAll(res.Body)
 
 	if err != nil {
-		log.Printf("Error reading response body: %v", err)
+		logger.Fatal().Str("Error", err.Error()).Msg("Error reading response body")
 		return "Error reading response body"
 	}
 
@@ -137,15 +179,7 @@ func getMarkets(currency string) string {
 }
 
 func init() {
+	ctx := context.Background()
+	initMetrics(ctx)
 	rootCmd.AddCommand(kbotCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// kbotCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// kbotCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
