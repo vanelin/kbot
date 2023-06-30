@@ -3,7 +3,7 @@ REGISTRY ?=vanelin
 
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS ?=linux
-TARGETOSARCH ?=arm64
+TARGETOSARCH ?=amd64
 
 format:
 	gofmt -s -w ./
@@ -33,7 +33,7 @@ clean:
 # linux: TARGETOS=linux
 # linux: build image push clean
 
-linux: # Build for linucx, by default this made for arm64
+linux: # Build for linux, by default this made for arm64
 	${MAKE} build TARGETOS=linux
 
 windows: # Build for windows, by default this made for arm64
