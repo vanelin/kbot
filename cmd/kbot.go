@@ -12,6 +12,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	telebot "gopkg.in/telebot.v3"
 )
@@ -19,6 +21,14 @@ import (
 var (
 	// TeleToken bot
 	TeleToken = os.Getenv("TELE_TOKEN")
+	// Create Prometheus CounterVec
+	cmdCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "kbot_commands_total",
+			Help: "The total number of processed commands",
+		},
+		[]string{"command"},
+	)
 )
 
 // kbotCmd represents the kbot command
@@ -52,13 +62,17 @@ to quickly create a Cobra application.`,
 
 			switch playload {
 			case "hello":
+				cmdCounter.WithLabelValues("hello").Inc()
 				err = m.Send(fmt.Sprintf("Hello I'm Kbot %s!", appVersion))
 			case "ping":
+				cmdCounter.WithLabelValues("ping").Inc()
 				err = m.Send(fmt.Sprintln("Pong"))
 			case "bitcoin":
+				cmdCounter.WithLabelValues("bitcoin").Inc()
 				marketMsg := getMarkets("bitcoin")
 				err = m.Send(marketMsg)
 			case "ethereum":
+				cmdCounter.WithLabelValues("ethereum").Inc()
 				marketMsg := getMarkets("ethereum")
 				err = m.Send(marketMsg)
 			}
@@ -123,15 +137,14 @@ func getMarkets(currency string) string {
 }
 
 func init() {
+	// Register Prometheus CounterVec
+	prometheus.MustRegister(cmdCounter)
+
+	// Start a HTTP server for Prometheus to scrape
+	http.Handle("/metrics", promhttp.Handler())
+	go func() {
+		log.Fatal(http.ListenAndServe(":8081", nil))
+	}()
+
 	rootCmd.AddCommand(kbotCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// kbotCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// kbotCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

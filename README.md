@@ -40,6 +40,8 @@ Available commands:
 
 1. `/start hello`
 2. `/start ping`
+3. `/start bitcoin`
+4. `/start ethereum`
 
 ## Makefile allows you to build code on different platforms. 
 
