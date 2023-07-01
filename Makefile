@@ -3,7 +3,7 @@ REGISTRY ?=vanelin
 
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS ?=linux
-TARGETOSARCH ?=arm64
+TARGETOSARCH ?=amd64
 
 format:
 	gofmt -s -w ./
