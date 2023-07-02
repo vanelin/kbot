@@ -10,6 +10,11 @@ Sample configuration for Kbot that send logs to [OpenTelemetry Collector] and me
 ## How to run
 
 ```bash
-export TELE_TOKEN=<TOKEN>
-docker-compose up
+ read -s TELE_TOKEN
+ export TELE_TOKEN
+
+ docker-compose -f otel/docker-compose.yaml up
+
+ docker-compose -f otel/docker-compose.yaml down
 ```
+Open Grafana in the browser on port 3002

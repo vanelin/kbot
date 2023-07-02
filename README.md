@@ -40,6 +40,8 @@ Available commands:
 
 1. `/start hello`
 2. `/start ping`
+3. `/start bitcoin`
+4. `/start ethereum`
 
 ## Makefile allows you to build code on different platforms. 
 
@@ -128,7 +130,7 @@ SECRET.KEY: type token for bot kbot
 1. Grant R/W permissions for workflos in repository settings/Action/General/Workflow permissions
 2. Add variables to the repository settings:
 
-    REGISTRY: `ghcr.io/vanelin`
+    REGISTRY: `vanelin`
 
     TARGETOS: `linux`
 
